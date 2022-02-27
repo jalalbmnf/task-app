@@ -1,26 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { lazy, Suspense } from "react";
+import { Routes, Route } from "react-router-dom";
 
-function App() {
+import Loading from "components/Loading";
+import Header from "components/Header";
+
+const CardPage = lazy(() => import("pages/Card/index"));
+const CardInternalPage = lazy(() => import("pages/Card/Internal/index"));
+const TransactionPage = lazy(() => import("pages/Transaction/index"));
+const TransactionInternalPage = lazy(
+  () => import("pages/Transaction/Internal/index")
+);
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header />
+      <Suspense fallback={<Loading />}>
+        <Routes>
+          <Route path="/card" element={<CardPage />} />
+          <Route path="/card/:cardId" element={<CardInternalPage />} />
+          <Route path="/transaction" element={<TransactionPage />} />
+          <Route
+            path="/transaction/:transactionId"
+            element={<TransactionInternalPage />}
+          />
+        </Routes>
+      </Suspense>
+    </>
   );
-}
+};
 
 export default App;
